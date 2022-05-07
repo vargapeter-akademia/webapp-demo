@@ -14,7 +14,7 @@ public class DemoTest {
 	
 	@Test
 	public void testFailure() {
-		assertTrue(2 == 2);
+		assertTrue(2 != 2);
 	}
 	
 }
