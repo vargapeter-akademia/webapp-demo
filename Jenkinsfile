@@ -5,9 +5,15 @@ pipeline {
 
     // "" <-- ez a Groovy String
     // '' <-- ez a Java String
-    stage("Compile") {
+    stage("Package") {
       steps {
-        sh "mvn compile"
+        sh "mvn package -DskipTests=true"
+      }
+
+      post {
+        success {
+          archiveArtifacts artifacts: "target/*.war", fingerprint: true
+        }
       }
     }
 
@@ -15,18 +21,11 @@ pipeline {
       steps {
         sh "mvn surefire:test"
       }
-    }
-
-    stage("Package") {
-      steps {
-        sh "mvn war:war"
-      }
 
       post {
-        success {
-          archiveArtifacts artifacts: "target/*.war", fingerprint: true
+        always {
+          junit "target/surefire-reports/TEST-*.xml"
         }
-
       }
 
     }
